@@ -50,7 +50,7 @@ Route::post('/products', function(Request $request){
     $newProduct->price = $data['price'];
     $newProduct->description = $data['description'];
     $newProduct->save();
-
+    $newProduct->images()->create(['image_url' => 'https://fastly.picsum.photos/id/237/200/300.jpg?hmac=TmmQSbShHz9CdQm0NkEjx1Dyh_Y984R9LpNrpvH2D_U']);
     return response()->json(['item' => $newProduct], 201);
 });
 
