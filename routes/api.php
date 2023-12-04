@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Product;
+use App\Models\ProductImage;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,15 +43,27 @@ Route::get('/products/{id}', function($id){
 });
 
 // Create a new product
-Route::post('/products', function(Request $request){
+Route::post('/products', function (Request $request) {
+    // Lấy dữ liệu từ request
     $data = $request->only(['price', 'name', 'description']);
 
+    // Tạo một bản ghi mới cho Product
     $newProduct = new Product();
     $newProduct->name = $data['name'];
     $newProduct->price = $data['price'];
     $newProduct->description = $data['description'];
+
+    // Sự kiện sau khi lưu
+    $newProduct->saved(function ($newProduct) {
+        // Tạo một bản ghi mới cho ProductImage sau khi lưu Product
+        $newProductImage = new ProductImage();
+        $newProductImage->product_id = $newProduct->id; // Gán id của Product
+        $newProductImage->image_url = 'https://fastly.picsum.photos/id/237/200/300.jpg?hmac=TmmQSbShHz9CdQm0NkEjx1Dyh_Y984R9LpNrpvH2D_U';
+        $newProductImage->save();
+    });
+
     $newProduct->save();
-    $newProduct->images()->create(['image_url' => 'https://fastly.picsum.photos/id/237/200/300.jpg?hmac=TmmQSbShHz9CdQm0NkEjx1Dyh_Y984R9LpNrpvH2D_U']);
+
     return response()->json(['item' => $newProduct], 201);
 });
 
