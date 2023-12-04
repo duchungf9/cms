@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::any('/media/upload', function(){
+    return response()->json(['error' => 0]);
+});
