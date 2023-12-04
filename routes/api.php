@@ -17,14 +17,14 @@ use App\Models\Product;
 
 // Get all products
 Route::get('/products', function(){
-    $products = Product::select(['product_id', 'price', 'product_name', 'description'])
+    $products = Product::select(['id', 'price', 'name', 'description'])
         ->with([
             'images:product_id,image_url',
             'productAttributes' => function ($query) {
                 $query->with('attributeImages:attribute_id,image_url');
             },
         ])
-        ->orderBy('product_id', 'DESC')
+        ->orderBy('id', 'DESC')
         ->get();
 
     return response()->json(['items' => $products]);
@@ -33,7 +33,7 @@ Route::get('/products', function(){
 // Get a specific product by ID
 Route::get('/products/{id}', function($id){
     $product = Product::find($id);
-    
+
     if(!$product) {
         return response()->json(['message' => 'Product not found'], 404);
     }
@@ -43,9 +43,13 @@ Route::get('/products/{id}', function($id){
 
 // Create a new product
 Route::post('/products', function(Request $request){
-    $data = $request->only(['price', 'product_name', 'image', 'description']);
+    $data = $request->only(['price', 'product_name', 'description']);
 
-    $newProduct = Product::create($data);
+    $newProduct = new Product();
+    $newProduct->name = $data['name'];
+    $newProduct->price = $data['price'];
+    $newProduct->description = $data['description'];
+    $newProduct->save();
 
     return response()->json(['item' => $newProduct], 201);
 });

@@ -1,4 +1,4 @@
-<?php 
+<?php
 // app/Models/Product.php
 
 namespace App\Models;
@@ -9,6 +9,7 @@ class Product extends Model
 {
     protected $table = 'products';
     protected $primaryKey = 'product_id';
+    protected $fillable = ['*'];
     public $timestamps = false;
 
     // Các mối quan hệ
@@ -19,7 +20,7 @@ class Product extends Model
 
     public function images()
     {
-        return $this->hasMany(ProductImage::class, 'product_id', 'product_id');
+        return $this->hasMany(ProductImage::class, 'product_id', 'id');
     }
 
     public function sizes()
@@ -39,8 +40,8 @@ class Product extends Model
 
     public function productAttributes()
     {
-        return $this->hasMany(ProductAttribute::class, 'product_id', 'product_id');
+        return $this->hasMany(ProductAttribute::class, 'product_id', 'id');
     }
-    
+
 }
 
