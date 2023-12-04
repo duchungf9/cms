@@ -25,4 +25,4 @@ Route::any('/media/upload', function(){
 Route::any('/products/list', function(){
     $products = DB::table('products')->select(['id', 'price', 'title', 'image', 'description'])->orderBy('id', 'DESC')->get();
     return response()->json(['items' => $products]);
-})
+});
