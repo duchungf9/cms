@@ -1,4 +1,4 @@
-<?php 
+<?php
 // app/Models/ProductImage.php
 
 namespace App\Models;
@@ -10,7 +10,7 @@ class ProductImage extends Model
     protected $table = 'product_images';
     protected $primaryKey = 'image_id';
     public $timestamps = false;
-
+    protected $fillable = ['*'];
     // Các mối quan hệ
     public function product()
     {
