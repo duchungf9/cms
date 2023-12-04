@@ -17,7 +17,16 @@ use App\Models\Product;
 
 // Get all products
 Route::get('/products', function(){
-    $products = Product::select(['product_id', 'price', 'product_name', 'image', 'description'])->orderBy('product_id', 'DESC')->get();
+    $products = Product::select(['product_id', 'price', 'product_name', 'description'])
+        ->with([
+            'images:product_id,image_url',
+            'productAttributes' => function ($query) {
+                $query->with('attributeImages:attribute_id,image_url');
+            },
+        ])
+        ->orderBy('product_id', 'DESC')
+        ->get();
+
     return response()->json(['items' => $products]);
 });
 

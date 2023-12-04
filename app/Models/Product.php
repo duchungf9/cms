@@ -36,5 +36,11 @@ class Product extends Model
     {
         return $this->belongsTo(Gender::class, 'gender_id', 'gender_id');
     }
+
+    public function productAttributes()
+    {
+        return $this->hasMany(ProductAttribute::class, 'product_id', 'product_id');
+    }
+    
 }
 
