@@ -17,7 +17,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::any('/media/upload', function(){
-    $products = DB::table('products')->get();
+    
 
-    return response()->json(['error' => 0, 'p' => $products]);
+    return response()->json(['error' => 0]);
 });
+
+Route::any('/products/list', function(){
+    $products = DB::table('products')->select(['id', 'price', 'title', 'image', 'description'])->orderBy('id', 'DESC')->get();
+    return response()->json(['items' => $products]);
+})
