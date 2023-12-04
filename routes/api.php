@@ -43,7 +43,7 @@ Route::get('/products/{id}', function($id){
 
 // Create a new product
 Route::post('/products', function(Request $request){
-    $data = $request->only(['price', 'product_name', 'description']);
+    $data = $request->only(['price', 'name', 'description']);
 
     $newProduct = new Product();
     $newProduct->name = $data['name'];
