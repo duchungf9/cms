@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::any('/products/list', function(){
+    $products = DB::table('products')->select(['id', 'price', 'title', 'image', 'description'])->orderBy('id', 'DESC')->get();
+    return response()->json(['items' => $products]);
+});
