@@ -1,7 +1,8 @@
 <?php
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
+use App\Models\Product;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,13 +17,13 @@ use Illuminate\Support\Facades\DB;
 
 // Get all products
 Route::get('/products', function(){
-    $products = DB::table('products')->select(['id', 'price', 'title', 'image', 'description'])->orderBy('id', 'DESC')->get();
+    $products = Product::select(['product_id', 'price', 'product_name', 'image', 'description'])->orderBy('product_id', 'DESC')->get();
     return response()->json(['items' => $products]);
 });
 
 // Get a specific product by ID
 Route::get('/products/{id}', function($id){
-    $product = DB::table('products')->find($id);
+    $product = Product::find($id);
     
     if(!$product) {
         return response()->json(['message' => 'Product not found'], 404);
@@ -33,41 +34,37 @@ Route::get('/products/{id}', function($id){
 
 // Create a new product
 Route::post('/products', function(Request $request){
-    $data = $request->only(['price', 'title', 'image', 'description']);
+    $data = $request->only(['price', 'product_name', 'image', 'description']);
 
-    $productId = DB::table('products')->insertGetId($data);
-
-    $newProduct = DB::table('products')->find($productId);
+    $newProduct = Product::create($data);
 
     return response()->json(['item' => $newProduct], 201);
 });
 
 // Update a product by ID
 Route::put('/products/{id}', function(Request $request, $id){
-    $product = DB::table('products')->find($id);
+    $product = Product::find($id);
 
     if(!$product) {
         return response()->json(['message' => 'Product not found'], 404);
     }
 
-    $data = $request->only(['price', 'title', 'image', 'description']);
+    $data = $request->only(['price', 'product_name', 'image', 'description']);
 
-    DB::table('products')->where('id', $id)->update($data);
+    $product->update($data);
 
-    $updatedProduct = DB::table('products')->find($id);
-
-    return response()->json(['item' => $updatedProduct]);
+    return response()->json(['item' => $product]);
 });
 
 // Delete a product by ID
 Route::delete('/products/{id}', function($id){
-    $product = DB::table('products')->find($id);
+    $product = Product::find($id);
 
     if(!$product) {
         return response()->json(['message' => 'Product not found'], 404);
     }
 
-    DB::table('products')->where('id', $id)->delete();
+    $product->delete();
 
     return response()->json(['message' => 'Product deleted successfully']);
 });
